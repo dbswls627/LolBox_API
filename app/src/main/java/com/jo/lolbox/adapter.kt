@@ -183,7 +183,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
         return recyclerViewHolder(view)
     }
     override fun onBindViewHolder(holder: recyclerViewHolder, position: Int) {
-//
+
             holder.name.text = list[position].name
             holder.cham.setImageResource(arrayList2[arrayList.indexOf(list[position].name)])
             holder.exp.text = list[position].point.toString()+"점"
