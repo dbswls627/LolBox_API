@@ -318,6 +318,11 @@ class ViewActivity : AppCompatActivity() {
 
         object : Thread() {
             override fun run() {
+                var tier: String? = null
+                var rank: String? = null
+                var point: String? = null
+                var wins: Int? = null
+                var losses: Int? = null
                 items.clear()
                 try {
                     val urlTierAddress = "$tierAddress$id?api_key=$key"
@@ -326,11 +331,7 @@ class ViewActivity : AppCompatActivity() {
                     val url2 = URL(urlTierAddress).readText()
                     val jsonArray1 = JSONArray(url1)
                     val jsonArray2 = JSONArray(url2)
-                    var tier: String? = null
-                    var rank: String? = null
-                    var point: String? = null
-                    var wins: Int? = null
-                    var losses: Int? = null
+
                     if (jsonArray2.toString() != "[]") {
                         for (i in 0 until jsonArray2.length()) {
                             var temp = jsonArray2.getJSONObject(i)
@@ -356,11 +357,22 @@ class ViewActivity : AppCompatActivity() {
                         items[arrayID.indexOf(id1)] =
                             item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
                     }
+                    item(adapter.arrayList[arrayID.indexOf(0)], "b", 1, 1)
                    /* items.sortWith(compareBy({ -it.level }, { -it.point }))
                     sortList=items
                     items.sortWith(compareBy{it.name})*/
 
 
+
+                } catch (e: MalformedURLException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }catch (e :ArrayIndexOutOfBoundsException){   // 신챔프 추가 안되었을 시
+                    e.printStackTrace()
+                }finally {
                     runOnUiThread {
                         if (tier != null) {
                             if (tier == "IRON") {
@@ -405,14 +417,9 @@ class ViewActivity : AppCompatActivity() {
                         }
 
                         mRecyclerAdapter.notifyDataSetChanged()
-                       /* mRecyclerAdapter3.notifyDataSetChanged()*/
+                        /* mRecyclerAdapter3.notifyDataSetChanged()*/
                     }
-                } catch (e: MalformedURLException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
+
                 }
             }
         }.start()
