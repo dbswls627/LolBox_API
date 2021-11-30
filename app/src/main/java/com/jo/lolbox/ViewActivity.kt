@@ -38,7 +38,7 @@ class ViewActivity : AppCompatActivity() {
     var score: TextView?=null
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
-    /*var sortList = ArrayList<item>()*/
+    var sortList = ArrayList<item>()
     val arrayID = arrayListOf(
         86,
         3,
@@ -212,38 +212,34 @@ class ViewActivity : AppCompatActivity() {
         sortButton=findViewById(R.id.sort)
         mRecyclerView = findViewById(R.id.recyclerView)
         mRecyclerView2 = findViewById(R.id.recyclerView2)
-        /*mRecyclerView3 = findViewById(R.id.recyclerView3)*/
+        mRecyclerView3 = findViewById(R.id.recyclerView3)
         /* initiate adapter */
         val mRecyclerAdapter = adapter(items)
         val mRecyclerAdapter2 = adapter(searchList)
-       /* val mRecyclerAdapter3 = adapter(sortList)*/
+        val mRecyclerAdapter3 = adapter(sortList)
         mRecyclerView!!.layoutManager = LinearLayoutManager(this)
         mRecyclerView2!!.layoutManager = LinearLayoutManager(this)
-       /* mRecyclerView3!!.layoutManager = LinearLayoutManager(this)*/
+        mRecyclerView3!!.layoutManager = LinearLayoutManager(this)
         /* initiate recyclerview */
         mRecyclerView!!.adapter = mRecyclerAdapter
         mRecyclerView2!!.adapter = mRecyclerAdapter2
-       /* mRecyclerView3!!.adapter = mRecyclerAdapter3
-        mRecyclerView2!!.visibility=View.GONE
-        mRecyclerView!!.visibility = View.GONE*/
+        mRecyclerView3!!.adapter = mRecyclerAdapter3
+        mRecyclerView3!!.visibility=View.GONE
         var b:Boolean=true
         sortButton!!.setOnClickListener {
+            search!!.setText("")
             if (b) {
-                items.sortWith(compareBy({ -it.level }, { -it.point }))
+                mRecyclerView3!!.visibility=View.VISIBLE
+                mRecyclerView!!.visibility=View.GONE
                 b=false
-                for (i in 0..items.size){
-                    mRecyclerAdapter.notifyItemChanged(i)
-                }
             }
             else{
-                items.sortWith(compareBy{it.name})
+                mRecyclerView!!.visibility=View.VISIBLE
+                mRecyclerView3!!.visibility=View.GONE
                 b=true
-                for (i in 0..items.size){
-                    mRecyclerAdapter.notifyItemChanged(i)
-                }
             }
         }
-        search?.addTextChangedListener(object : TextWatcher {
+        search!!.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
                 val searchText: String = search?.text.toString()
                 searchFilter(searchText)
@@ -255,6 +251,7 @@ class ViewActivity : AppCompatActivity() {
             private fun searchFilter(searchText: String) {
                 searchList.clear()
                 mRecyclerView!!.visibility = View.GONE
+                mRecyclerView3!!.visibility = View.GONE
                 mRecyclerView2!!.adapter = mRecyclerAdapter2
                 when (searchText) {
                     "그브" -> {
@@ -346,6 +343,7 @@ class ViewActivity : AppCompatActivity() {
                     }
                     for (i in 0 until adapter.arrayList.size) {
                         items.add(item(adapter.arrayList[i], "false", 0, 0))
+                        sortList.add(item(adapter.arrayList[i], "false", 0, 0))
                     }
 
                     for (i in 0 until jsonArray1.length()) {
@@ -357,11 +355,11 @@ class ViewActivity : AppCompatActivity() {
                         items[arrayID.indexOf(id1)] =
                             item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
                     }
-                    item(adapter.arrayList[arrayID.indexOf(0)], "b", 1, 1)
-                   /* items.sortWith(compareBy({ -it.level }, { -it.point }))
-                    sortList=items
-                    items.sortWith(compareBy{it.name})*/
-
+                    items.sortWith(compareBy({ -it.level }, { -it.point }))
+                    for (i in 0.. items.size-1){
+                        sortList[i]=items[i]
+                    }
+                    items.sortWith(compareBy{it.name})
 
 
                 } catch (e: MalformedURLException) {
@@ -417,7 +415,7 @@ class ViewActivity : AppCompatActivity() {
                         }
 
                         mRecyclerAdapter.notifyDataSetChanged()
-                        /* mRecyclerAdapter3.notifyDataSetChanged()*/
+                         mRecyclerAdapter3.notifyDataSetChanged()
                     }
 
                 }
