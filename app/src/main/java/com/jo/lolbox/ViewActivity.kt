@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,22 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jo.json.R
 import org.json.JSONArray
 import org.json.JSONException
-import android.app.Fragment
 import android.view.View
 import java.io.IOException
 import java.lang.Math.round
 import java.net.MalformedURLException
 import java.net.URL
 import java.util.ArrayList
-import kotlin.concurrent.thread
 
 class ViewActivity : AppCompatActivity() {
     private val key = "RGAPI-92235ea0-30bc-4644-ae14-7851cfa60ecd"
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
-    private var mRecyclerView: RecyclerView? = null
-    private var mRecyclerView2: RecyclerView? =null
-    private var mRecyclerView3: RecyclerView? =null
+    private var mainRv: RecyclerView? = null
+    private var searchRv: RecyclerView? =null
+    private var sortRv: RecyclerView? =null
     var icon: ImageView?=null
     var sortButton: ImageView?=null
     var idv: TextView?=null
@@ -210,32 +207,32 @@ class ViewActivity : AppCompatActivity() {
         score = findViewById(R.id.score)
         search = findViewById(R.id.search)
         sortButton=findViewById(R.id.sort)
-        mRecyclerView = findViewById(R.id.recyclerView)
-        mRecyclerView2 = findViewById(R.id.recyclerView2)
-        mRecyclerView3 = findViewById(R.id.recyclerView3)
+        mainRv = findViewById(R.id.recyclerView)
+        searchRv = findViewById(R.id.recyclerView2)
+        sortRv = findViewById(R.id.recyclerView3)
         /* initiate adapter */
         val mRecyclerAdapter = adapter(items)
         val mRecyclerAdapter2 = adapter(searchList)
         val mRecyclerAdapter3 = adapter(sortList)
-        mRecyclerView!!.layoutManager = LinearLayoutManager(this)
-        mRecyclerView2!!.layoutManager = LinearLayoutManager(this)
-        mRecyclerView3!!.layoutManager = LinearLayoutManager(this)
+        mainRv!!.layoutManager = LinearLayoutManager(this)
+        searchRv!!.layoutManager = LinearLayoutManager(this)
+        sortRv!!.layoutManager = LinearLayoutManager(this)
         /* initiate recyclerview */
-        mRecyclerView!!.adapter = mRecyclerAdapter
-        mRecyclerView2!!.adapter = mRecyclerAdapter2
-        mRecyclerView3!!.adapter = mRecyclerAdapter3
-        mRecyclerView3!!.visibility=View.GONE
+        mainRv!!.adapter = mRecyclerAdapter
+        searchRv!!.adapter = mRecyclerAdapter2
+        sortRv!!.adapter = mRecyclerAdapter3
+        sortRv!!.visibility=View.GONE
         var b:Boolean=true
         sortButton!!.setOnClickListener {
             search!!.setText("")
             if (b) {
-                mRecyclerView3!!.visibility=View.VISIBLE
-                mRecyclerView!!.visibility=View.GONE
+                sortRv!!.visibility=View.VISIBLE
+                mainRv!!.visibility=View.GONE
                 b=false
             }
             else{
-                mRecyclerView!!.visibility=View.VISIBLE
-                mRecyclerView3!!.visibility=View.GONE
+                mainRv!!.visibility=View.VISIBLE
+                sortRv!!.visibility=View.GONE
                 b=true
             }
         }
@@ -250,9 +247,9 @@ class ViewActivity : AppCompatActivity() {
             }
             private fun searchFilter(searchText: String) {
                 searchList.clear()
-                mRecyclerView!!.visibility = View.GONE
-                mRecyclerView3!!.visibility = View.GONE
-                mRecyclerView2!!.adapter = mRecyclerAdapter2
+                mainRv!!.visibility = View.GONE
+                sortRv!!.visibility = View.GONE
+                searchRv!!.adapter = mRecyclerAdapter2
                 when (searchText) {
                     "그브" -> {
                         searchList.add(items[adapter.arrayList.indexOf("그레이브즈")])
@@ -293,7 +290,7 @@ class ViewActivity : AppCompatActivity() {
 
                     }
                     ""->{
-                        mRecyclerView!!.visibility = View.VISIBLE
+                        mainRv!!.visibility = View.VISIBLE
                     }
                     else -> {
                         for (i in 0 until items.size) {
@@ -356,8 +353,8 @@ class ViewActivity : AppCompatActivity() {
                             item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
                     }
                     items.sortWith(compareBy({ -it.level }, { -it.point }))
-                    for (i in 0.. items.size-1){
-                        sortList[i]=items[i]
+                    for (i in 0 until items.size) {
+                        sortList[i] = items[i]
                     }
                     items.sortWith(compareBy{it.name})
 
