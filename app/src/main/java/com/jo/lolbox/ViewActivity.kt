@@ -35,6 +35,7 @@ class ViewActivity : AppCompatActivity() {
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
+    //champion id 와 매칭 
     val arrayID = arrayListOf(
         86,
         3,
