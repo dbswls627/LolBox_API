@@ -2,6 +2,7 @@ package com.jo.lolbox
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,8 +20,6 @@ class MainActivity : AppCompatActivity() {
     var t : EditText?=null
     private var rv : RecyclerView?=null
     lateinit var db: AppDatabase
-
-    private val key = "RGAPI-92235ea0-30bc-4644-ae14-7851cfa60ecd"
     private val idAddress = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
     override fun onRestart() {
         notifyDataSetChanged()
@@ -52,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         var id: String? = null
         var i: String? = null
         var name: String? = null
-        val urlIdAddress = "$idAddress$url?api_key=$key"
+        val urlIdAddress = idAddress+url+"?api_key="+resources.getString(R.string.key)
+
         try {
             val url1 = URL(urlIdAddress).readText()
             val obj = JSONObject(url1)

@@ -20,7 +20,6 @@ import java.net.URL
 import java.util.ArrayList
 
 class ViewActivity : AppCompatActivity() {
-    private val key = "RGAPI-92235ea0-30bc-4644-ae14-7851cfa60ecd"
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
     private var mainRv: RecyclerView? = null
@@ -319,8 +318,8 @@ class ViewActivity : AppCompatActivity() {
                 var losses: Int? = null
                 items.clear()
                 try {
-                    val urlTierAddress = "$tierAddress$id?api_key=$key"
-                    val urlBoxAddress = "$boxAddress$id?api_key=$key"
+                    val urlTierAddress = tierAddress+id+"?api_key="+resources.getString(R.string.key)
+                    val urlBoxAddress =  boxAddress+id+"?api_key="+resources.getString(R.string.key)
                     val url1 = URL(urlBoxAddress).readText()
                     val url2 = URL(urlTierAddress).readText()
                     val jsonArray1 = JSONArray(url1)
