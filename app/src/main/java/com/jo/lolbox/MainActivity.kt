@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             else false
         }
     }
+
     fun setIntent(url :String) {
         val intent = Intent(this, ViewActivity::class.java)
         object : Thread() {
