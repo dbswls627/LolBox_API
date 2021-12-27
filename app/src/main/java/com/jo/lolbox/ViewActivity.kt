@@ -338,11 +338,11 @@ class ViewActivity : AppCompatActivity() {
                             }
                         }
                     }
-
-                    for (i in 0 until adapter.arrayList.size) {
-                        items.add(item(adapter.arrayList[i], "false", 0, 0))
-                        sortList.add(item(adapter.arrayList[i], "false", 0, 0))
+                    adapter.arrayList.forEach { i ->
+                        items.add(item(i, "false", 0, 0))
+                        sortList.add(item(i, "false", 0, 0))
                     }
+
 
                     for (i in 0 until jsonArray1.length()) {
                         val temp = jsonArray1.getJSONObject(i)
@@ -354,9 +354,10 @@ class ViewActivity : AppCompatActivity() {
                             item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
                     }
                     items.sortWith(compareBy({ -it.level }, { -it.point }))
-                    for (i in 0 until items.size) {
-                        sortList[i] = items[i]
+                    items.forEachIndexed { index,value ->
+                        sortList[index]=value
                     }
+                  
                     items.sortWith(compareBy{it.name})
 
 
