@@ -35,7 +35,7 @@ class ViewActivity : AppCompatActivity() {
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
-    //champion id 와 매칭 
+    //champion id 와 매칭
     val arrayID = arrayListOf(
         86,
         3,
@@ -293,12 +293,12 @@ class ViewActivity : AppCompatActivity() {
                         mainRv!!.visibility = View.VISIBLE
                     }
                     else -> {
-                        for (i in 0 until items.size) {
-                            if (items[i].name.length >= searchText.length) {
-                                if (items[i].name.substring(0, searchText.length)
+                        items.forEach { i ->
+                            if (i.name.length >= searchText.length) {
+                                if (i.name.substring(0, searchText.length)
                                         .contains(searchText)
                                 ) {
-                                    searchList.add(items[i])
+                                    searchList.add(i)
                                 }
                             }
                         }
@@ -309,9 +309,7 @@ class ViewActivity : AppCompatActivity() {
         var id = intent.getStringExtra("nameKey")
         var i = intent.getStringExtra("i")
         var name = intent.getStringExtra("name")
-
-        object : Thread() {
-            override fun run() {
+        Thread {
                 var tier: String? = null
                 var rank: String? = null
                 var point: String? = null
@@ -327,6 +325,7 @@ class ViewActivity : AppCompatActivity() {
                     val jsonArray2 = JSONArray(url2)
 
                     if (jsonArray2.toString() != "[]") {
+
                         for (i in 0 until jsonArray2.length()) {
                             var temp = jsonArray2.getJSONObject(i)
                             if (temp.getString("queueType") == "RANKED_SOLO_5x5") {
@@ -335,9 +334,11 @@ class ViewActivity : AppCompatActivity() {
                                 point = temp.getString("leaguePoints")
                                 wins = temp.getInt("wins")
                                 losses = temp.getInt("losses")
+                                break;
                             }
                         }
                     }
+
                     for (i in 0 until adapter.arrayList.size) {
                         items.add(item(adapter.arrayList[i], "false", 0, 0))
                         sortList.add(item(adapter.arrayList[i], "false", 0, 0))
@@ -416,7 +417,6 @@ class ViewActivity : AppCompatActivity() {
                     }
 
                 }
-            }
         }.start()
     }
 

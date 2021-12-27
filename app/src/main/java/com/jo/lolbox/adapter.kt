@@ -19,7 +19,7 @@ class recyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var exp: TextView = itemView.findViewById<View>(R.id.exp) as TextView
 }
 class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recyclerViewHolder>() {
-    private var arrayList2 =arrayListOf(
+    private var championIconList =arrayListOf(
             R.drawable.garen,
             R.drawable.galio,
             R.drawable.gangplank,
@@ -185,7 +185,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
     override fun onBindViewHolder(holder: recyclerViewHolder, position: Int) {
 
             holder.name.text = list[position].name
-            holder.cham.setImageResource(arrayList2[arrayList.indexOf(list[position].name)])
+            holder.cham.setImageResource(championIconList[arrayList.indexOf(list[position].name)])
             holder.exp.text = list[position].point.toString()+"점"
             if (list[position].level == 1) {
                     holder.level.setImageResource(R.drawable.level1)
@@ -368,7 +368,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
                 "타릭",
                 "탈론",
                 "탈리야",
-                "탐 켄치",
+                "탐켄치",
                 "트런들",
                 "트리스타나",
                 "트린다미어",
