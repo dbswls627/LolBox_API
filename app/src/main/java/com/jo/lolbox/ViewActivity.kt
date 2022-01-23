@@ -1,5 +1,6 @@
 package com.jo.lolbox
 
+import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -151,6 +152,7 @@ class ViewActivity : AppCompatActivity() {
         24,
         238,
         101,
+        221,
         126,
         142,
         115,
@@ -196,6 +198,7 @@ class ViewActivity : AppCompatActivity() {
         120
     )
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -353,12 +356,7 @@ class ViewActivity : AppCompatActivity() {
                         items[arrayID.indexOf(id1)] =
                             item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
                     }
-                    items.sortWith(compareBy({ -it.level }, { -it.point }))
-                    items.forEachIndexed { index,value ->
-                        sortList[index]=value
-                    }
-                  
-                    items.sortWith(compareBy{it.name})
+
 
 
                 } catch (e: MalformedURLException) {
@@ -370,6 +368,11 @@ class ViewActivity : AppCompatActivity() {
                 }catch (e :ArrayIndexOutOfBoundsException){   // 신챔프 추가 안되었을 시
                     e.printStackTrace()
                 }finally {
+                    items.sortWith(compareBy({ -it.level }, { -it.point }))
+                    items.forEachIndexed { index,value ->
+                        sortList[index]=value
+                    }
+                    items.sortWith(compareBy{it.name})
                     runOnUiThread {
                         if (tier != null) {
                             if (tier == "IRON") {
@@ -414,7 +417,7 @@ class ViewActivity : AppCompatActivity() {
                         }
 
                         mRecyclerAdapter.notifyDataSetChanged()
-                         mRecyclerAdapter3.notifyDataSetChanged()
+                        mRecyclerAdapter3.notifyDataSetChanged()
                     }
 
                 }
