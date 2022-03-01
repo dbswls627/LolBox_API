@@ -24,8 +24,6 @@ class ViewActivity : AppCompatActivity() {
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
     private var mainRv: RecyclerView? = null
-    private var searchRv: RecyclerView? =null
-    private var sortRv: RecyclerView? =null
     var icon: ImageView?=null
     var sortButton: ImageView?=null
     var idv: TextView?=null
@@ -60,6 +58,7 @@ class ViewActivity : AppCompatActivity() {
         33,
         99,
         68,
+        888,
         58,
         89,
         421,
@@ -211,31 +210,23 @@ class ViewActivity : AppCompatActivity() {
         search = findViewById(R.id.search)
         sortButton=findViewById(R.id.sort)
         mainRv = findViewById(R.id.recyclerView)
-        searchRv = findViewById(R.id.recyclerView2)
-        sortRv = findViewById(R.id.recyclerView3)
         /* initiate adapter */
         val mRecyclerAdapter = adapter(items)
-        val mRecyclerAdapter2 = adapter(searchList)
-        val mRecyclerAdapter3 = adapter(sortList)
+
         mainRv!!.layoutManager = LinearLayoutManager(this)
-        searchRv!!.layoutManager = LinearLayoutManager(this)
-        sortRv!!.layoutManager = LinearLayoutManager(this)
+
         /* initiate recyclerview */
         mainRv!!.adapter = mRecyclerAdapter
-        searchRv!!.adapter = mRecyclerAdapter2
-        sortRv!!.adapter = mRecyclerAdapter3
-        sortRv!!.visibility=View.GONE
+
         var b:Boolean=true
         sortButton!!.setOnClickListener {
             search!!.setText("")
             if (b) {
-                sortRv!!.visibility=View.VISIBLE
-                mainRv!!.visibility=View.GONE
+                mainRv!!.adapter = adapter(sortList)
                 b=false
             }
             else{
-                mainRv!!.visibility=View.VISIBLE
-                sortRv!!.visibility=View.GONE
+                mainRv!!.adapter = adapter(items)
                 b=true
             }
         }
@@ -250,12 +241,14 @@ class ViewActivity : AppCompatActivity() {
             }
             private fun searchFilter(searchText: String) {
                 searchList.clear()
-                mainRv!!.visibility = View.GONE
-                sortRv!!.visibility = View.GONE
-                searchRv!!.adapter = mRecyclerAdapter2
+
+
                 when (searchText) {
                     "그브" -> {
                         searchList.add(items[adapter.arrayList.indexOf("그레이브즈")])
+                    }
+                    "레나타글라스크" -> {
+                        searchList.add(items[adapter.arrayList.indexOf("레나타 글라스크")])
                     }
                     "윌럼프" -> {
                         searchList.add(items[adapter.arrayList.indexOf("누누와윌럼프")])
@@ -292,9 +285,7 @@ class ViewActivity : AppCompatActivity() {
                         searchList.add(items[adapter.arrayList.indexOf("트위스티드페이트")])
 
                     }
-                    ""->{
-                        mainRv!!.visibility = View.VISIBLE
-                    }
+
                     else -> {
                         items.forEach { i ->
                             if (i.name.length >= searchText.length) {
@@ -307,6 +298,7 @@ class ViewActivity : AppCompatActivity() {
                         }
                     }
                 }
+                mainRv!!.adapter = adapter(searchList)
             }
         })
         var id = intent.getStringExtra("nameKey")
@@ -417,7 +409,6 @@ class ViewActivity : AppCompatActivity() {
                         }
 
                         mRecyclerAdapter.notifyDataSetChanged()
-                        mRecyclerAdapter3.notifyDataSetChanged()
                     }
 
                 }
