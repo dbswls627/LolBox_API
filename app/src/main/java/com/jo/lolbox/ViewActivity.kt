@@ -1,28 +1,20 @@
 package com.jo.lolbox
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jo.json.R
-import org.json.JSONArray
-import org.json.JSONException
-import android.view.View
-import java.io.IOException
 import java.lang.Math.round
-import java.net.MalformedURLException
-import java.net.URL
-import java.util.ArrayList
+import java.util.*
 
 class ViewActivity : AppCompatActivity() {
-    private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
-    private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
     private var mainRv: RecyclerView? = null
     var icon: ImageView?=null
     var sortButton: ImageView?=null
@@ -34,168 +26,11 @@ class ViewActivity : AppCompatActivity() {
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
-    //champion id 와 매칭
-    val arrayID = arrayListOf(
-        86,
-        3,
-        41,
-        79,
-        104,
-        887,
-        150,
-        267,
-        75,
-        111,
-        56,
-        20,
-        76,
-        518,
-        122,
-        131,
-        119,
-        13,
-        497,
-        33,
-        99,
-        68,
-        888,
-        58,
-        89,
-        421,
-        526,
-        107,
-        236,
-        117,
-        7,
-        64,
-        92,
-        127,
-        876,
-        11,
-        57,
-        90,
-        54,
-        82,
-        25,
-        36,
-        21,
-        432,
-        110,
-        254,
-        45,
-        67,
-        711,
-        161,
-        106,
-        201,
-        63,
-        8,
-        53,
-        234,
-        112,
-        78,
-        360,
-        14,
-        517,
-        35,
-        235,
-        147,
-        113,
-        875,
-        37,
-        16,
-        98,
-        102,
-        50,
-        72,
-        15,
-        5,
-        134,
-        27,
-        412,
-        103,
-        32,
-        136,
-        427,
-        268,
-        84,
-        166,
-        266,
-        523,
-        12,
-        1,
-        34,
-        22,
-        157,
-        245,
-        60,
-        62,
-        516,
-        61,
-        2,
-        777,
-        83,
-        77,
-        6,
-        19,
-        350,
-        39,
-        28,
-        81,
-        420,
-        59,
-        498,
-        143,
-        154,
-        40,
-        24,
-        238,
-        101,
-        221,
-        126,
-        142,
-        115,
-        202,
-        26,
-        222,
-        31,
-        43,
-        164,
-        38,
-        30,
-        69,
-        145,
-        121,
-        55,
-        429,
-        85,
-        51,
-        141,
-        10,
-        96,
-        42,
-        133,
-        240,
-        246,
-        203,
-        44,
-        91,
-        163,
-        223,
-        48,
-        18,
-        23,
-        4,
-        29,
-        17,
-        555,
-        80,
-        9,
-        114,
-        105,
-        74,
-        120
-    )
+
+    override fun onRestart() {
+        super.onRestart()
+        items.clear()
+    }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -208,26 +43,28 @@ class ViewActivity : AppCompatActivity() {
         point2 = findViewById(R.id.point)
         score = findViewById(R.id.score)
         search = findViewById(R.id.search)
-        sortButton=findViewById(R.id.sort)
+        sortButton = findViewById(R.id.sort)
         mainRv = findViewById(R.id.recyclerView)
         /* initiate adapter */
-        val mRecyclerAdapter = adapter(items)
 
         mainRv!!.layoutManager = LinearLayoutManager(this)
 
         /* initiate recyclerview */
-        mainRv!!.adapter = mRecyclerAdapter
 
-        var b:Boolean=true
+
+        items = intent.getSerializableExtra("items") as ArrayList<item>;
+        mainRv!!.adapter = adapter(items)
+        sortList = intent.getSerializableExtra("sort") as ArrayList<item>;
+        val tier: String = intent.getStringExtra("tier").toString()
+        var b: Boolean = true
         sortButton!!.setOnClickListener {
             search!!.setText("")
             if (b) {
                 mainRv!!.adapter = adapter(sortList)
-                b=false
-            }
-            else{
+                b = false
+            } else {
                 mainRv!!.adapter = adapter(items)
-                b=true
+                b = true
             }
         }
         search!!.addTextChangedListener(object : TextWatcher {
@@ -301,120 +138,60 @@ class ViewActivity : AppCompatActivity() {
                 mainRv!!.adapter = adapter(searchList)
             }
         })
-        var id = intent.getStringExtra("nameKey")
-        var i = intent.getStringExtra("i")
-        var name = intent.getStringExtra("name")
-        Thread {
-                var tier: String? = null
-                var rank: String? = null
-                var point: String? = null
-                var wins: Int? = null
-                var losses: Int? = null
-                items.clear()
-                try {
-                    val urlTierAddress = tierAddress+id+"?api_key="+resources.getString(R.string.key)
-                    val urlBoxAddress =  boxAddress+id+"?api_key="+resources.getString(R.string.key)
-                    val url1 = URL(urlBoxAddress).readText()
-                    val url2 = URL(urlTierAddress).readText()
-                    val jsonArray1 = JSONArray(url1)
-                    val jsonArray2 = JSONArray(url2)
 
-                    if (jsonArray2.toString() != "[]") {
+        tierv?.text = "$tier  ${intent.getStringExtra("rank")}"
+        point2?.text = intent.getStringExtra("leaguePoints") + "LP"
 
-                        for (i in 0 until jsonArray2.length()) {
-                            var temp = jsonArray2.getJSONObject(i)
-                            if (temp.getString("queueType") == "RANKED_SOLO_5x5") {
-                                tier = temp.getString("tier")
-                                rank = temp.getString("rank")
-                                point = temp.getString("leaguePoints")
-                                wins = temp.getInt("wins")
-                                losses = temp.getInt("losses")
-                                break;
-                            }
-                        }
-                    }
-                    adapter.arrayList.forEach { i ->
-                        items.add(item(i, "false", 0, 0))
-                        sortList.add(item(i, "false", 0, 0))
-                    }
+        when (tier) {
 
-
-                    for (i in 0 until jsonArray1.length()) {
-                        val temp = jsonArray1.getJSONObject(i)
-                        val id1 = temp.getInt("championId")
-                        val b = temp.getString("chestGranted")
-                        val l = temp.getInt("championLevel")
-                        val p = temp.getInt("championPoints")
-                        items[arrayID.indexOf(id1)] =
-                            item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
-                    }
+            "IRON" -> {
+                icon?.setImageResource(R.drawable.iron)
+            }
+            "BRONZE" -> {
+                icon?.setImageResource(R.drawable.bronze)
+            }
+            "SILVER" -> {
+                icon?.setImageResource(R.drawable.silver)
+            }
+            "GOLD" -> {
+                icon?.setImageResource(R.drawable.gold)
+            }
+            "PLATINUM" -> {
+                icon?.setImageResource(R.drawable.platinum)
+            }
+            "DIAMOND" -> {
+                icon?.setImageResource(R.drawable.diamond)
+            }
+            "MASTER" -> {
+                icon?.setImageResource(R.drawable.master)
+            }
+            "GRANDMASTER" -> {
+                icon?.setImageResource(R.drawable.grandmaster)
+            }
+            "CHALLENGER" -> {
+                icon?.setImageResource(R.drawable.challenger)
+            }
+            else -> {
+                icon?.setImageResource(R.drawable.provisional)
+                tierv?.text = "Unranked"
+                point2?.text = ""
+            }
+        }
+        idv?.text = intent.getStringExtra("name")
 
 
-
-                } catch (e: MalformedURLException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }catch (e :ArrayIndexOutOfBoundsException){   // 신챔프 추가 안되었을 시
-                    e.printStackTrace()
-                }finally {
-                    items.sortWith(compareBy({ -it.level }, { -it.point }))
-                    items.forEachIndexed { index,value ->
-                        sortList[index]=value
-                    }
-                    items.sortWith(compareBy{it.name})
-                    runOnUiThread {
-                        if (tier != null) {
-                            if (tier == "IRON") {
-                                icon?.setImageResource(R.drawable.iron)
-                            }
-                            if (tier == "BRONZE") {
-                                icon?.setImageResource(R.drawable.bronze)
-                            }
-                            if (tier == "SILVER") {
-                                icon?.setImageResource(R.drawable.silver)
-                            }
-                            if (tier == "GOLD") {
-                                icon?.setImageResource(R.drawable.gold)
-                            }
-                            if (tier == "PLATINUM") {
-                                icon?.setImageResource(R.drawable.platinum)
-                            }
-                            if (tier == "DIAMOND") {
-                                icon?.setImageResource(R.drawable.diamond)
-                            }
-                            if (tier == "MASTER") {
-                                icon?.setImageResource(R.drawable.master)
-                            }
-                            if (tier == "GRANDMASTER") {
-                                icon?.setImageResource(R.drawable.grandmaster)
-                            }
-                            if (tier == "CHALLENGER") {
-                                icon?.setImageResource(R.drawable.challenger)
-                            }
-                            tierv?.text = "$tier  $rank"
-                            idv?.text = name
-                            point2?.text = point + "LP"
-                            score?.text =
-                                (wins!!.plus(losses!!)).toString() + "전 " + wins + "승 " + losses + "패 " + "(" + round(
-                                    wins!! / (wins!!.plus(losses!!).toFloat()) * 100 * 10
-                                ) / 10f + "%)"
-                        }
-                        if (tier == null) {
-                            icon?.setImageResource(R.drawable.provisional)
-                            idv?.text = name
-                            tierv?.text = "Unranked"
-                        }
-
-                        mRecyclerAdapter.notifyDataSetChanged()
-                    }
-
-                }
-        }.start()
+        val wins = intent.getIntExtra("wins",0)
+        val losses = intent.getIntExtra("losses",0)
+        score?.text =
+            (wins!!.plus(losses!!)).toString() + "전 " + wins + "승 " + losses + "패 " + "(" + round(
+                wins!! / (wins!!.plus(losses!!).toFloat()) * 100 * 10
+            ) / 10f + "%)"
     }
 
+
 }
+
+
+
 
 

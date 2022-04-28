@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:background="@drawable/back"
     tools:context="com.jo.lolbox.MainActivity">
+    <TextView
+        android:id="@+id/warning"
+        android:background="#FA9191"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="리그오브레전드 공식 API 서버의 장애로 인해 느려질 수 있습니다."/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"

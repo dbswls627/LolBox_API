@@ -8,8 +8,9 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.jo.json.R
+import java.io.Serializable
 import java.util.*
-class item(val name:String,val box:String,val level:Int,val point:Int)
+class item(val name:String,val box:String,val level:Int,val point:Int) : Serializable
 class recyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var cham: ImageView = itemView.findViewById<View>(R.id.img) as ImageView
         var box: ImageView = itemView.findViewById<View>(R.id.box) as ImageView
@@ -189,6 +190,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
             holder.name.text = list[position].name
             holder.cham.setImageResource(championIconList[arrayList.indexOf(list[position].name)])
             holder.exp.text = list[position].point.toString()+"점"
+            
             if (list[position].level == 1) {
                     holder.level.setImageResource(R.drawable.level1)
             }
