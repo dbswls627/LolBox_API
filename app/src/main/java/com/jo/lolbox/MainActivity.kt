@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     var t: EditText? = null
     private var rv: RecyclerView? = null
     var id: String? = null
+    var idSuccess = true
     lateinit var db: AppDatabase
     var items = ArrayList<item>()
     var sortList = ArrayList<item>()
@@ -215,6 +216,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setIntent(name: String) {
+        idSuccess = true
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.loding_dialog)
         dialog.window!!.setLayout(
@@ -226,15 +228,16 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
         items.clear()
         val intent = Intent(this, ViewActivity::class.java)
-        var b = true
+        var cancel = false
         val thread = Thread {
 
             searchID(name, intent)
-            searchData(intent)
-
+            if (idSuccess) {
+                searchData(intent)
+            }
             dialog.dismiss()
 
-            if (b) {
+            if (!cancel && idSuccess) {
                 startActivity(intent)
             }
 
@@ -244,7 +247,7 @@ class MainActivity : AppCompatActivity() {
         thread.start()
         dialog.setOnCancelListener {
             thread.interrupt()
-            b = false
+            cancel = true
         }
 
     }
@@ -280,7 +283,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 Toast.makeText(this@MainActivity, "존재하지 않는 소환사명입니다.", Toast.LENGTH_SHORT)
                     .show()
-                return@runOnUiThread
+                idSuccess = false
             }
 
             e.printStackTrace()
