@@ -241,8 +241,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        dialog.setOnCancelListener { b = false }
         thread.start()
+        dialog.setOnCancelListener {
+            thread.interrupt()
+            b = false
+        }
 
     }
     fun notifyDataSetChanged(){
