@@ -27,10 +27,6 @@ class ViewActivity : AppCompatActivity() {
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
 
-    override fun onRestart() {
-        super.onRestart()
-        items.clear()
-    }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
