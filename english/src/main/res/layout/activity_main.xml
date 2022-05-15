@@ -1,19 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
+    android:orientation="vertical"
+    android:background="@drawable/back"
+    tools:context="com.jo.lolbox.MainActivity">
     <TextView
-        android:id="@+id/textview"
-        android:layout_width="wrap_content"
+        android:id="@+id/warning"
+        android:background="#FA9191"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="리그오브레전드 공식 API 서버의 장애로 인해 느려질 수 있습니다."/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:src="@drawable/level7"/>
+    <LinearLayout
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <EditText
+            android:drawablePadding="10dp"
+            android:hint="소환사명 검색"
+            android:id="@+id/text"
+            android:layout_weight="5"
+            android:layout_width="0dp"
+            android:inputType="textPersonName"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:drawableLeft="@drawable/ic_baseline_search_24" />
+    </LinearLayout>
+    <TextView
+        android:paddingBottom="5dp"
+        android:textSize="40dp"
+        android:text="최근검색"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
