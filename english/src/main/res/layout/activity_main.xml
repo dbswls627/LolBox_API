@@ -6,12 +6,17 @@
     android:orientation="vertical"
     android:background="@drawable/back"
     tools:context="com.jo.lolbox.MainActivity">
+
     <TextView
         android:id="@+id/warning"
         android:background="#FA9191"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="리그오브레전드 공식 API 서버의 장애로 인해 느려질 수 있습니다."/>
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="100dp"
+        android:layout_height="50dp"/>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
@@ -21,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:drawablePadding="10dp"
             android:hint="소환사명 검색"

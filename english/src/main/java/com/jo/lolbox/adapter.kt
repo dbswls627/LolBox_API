@@ -1,8 +1,10 @@
 package com.jo.lolbox
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.jo.lolbox.databinding.ItemBinding
 import java.io.Serializable
 import java.util.*
@@ -18,20 +20,22 @@ class recyclerViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHo
 }
 
 class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recyclerViewHolder>() {
-
-
+    private var context : Context? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclerViewHolder {
-        val binding = ItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        context = parent.context
+        val binding = ItemBinding.inflate(LayoutInflater.from(context), parent, false)
         return recyclerViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: recyclerViewHolder, position: Int) {
 
         holder.name.text = list[position].name
-       // holder.cham.setImageResource(championIconList[arrayList.indexOf(list[position].name)])
+        val imageUrl =
+            "http://ddragon.leagueoflegends.com/cdn/12.9.1/img/champion/"
+        Glide.with(context!!).load(imageUrl+list[position].name+".png").into(holder.cham)
         holder.exp.text = list[position].point.toString() + "점"
 
-      /*  if (list[position].level == 1) {
+        if (list[position].level == 1) {
             holder.level.setImageResource(R.drawable.level1)
         }
         if (list[position].level == 2) {
@@ -58,7 +62,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
         } else {
             holder.text.text = "상자 미획득"
             holder.box.setImageResource(R.drawable.boxp)
-        }*/
+        }
 
     }
 

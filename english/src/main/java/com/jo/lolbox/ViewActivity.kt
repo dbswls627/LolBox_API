@@ -64,62 +64,15 @@ class ViewActivity : AppCompatActivity() {
             private fun searchFilter(searchText: String) {
                 searchList.clear()
 
-
-        /*        when (searchText) {
-                    "그브" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("그레이브즈")])
-                    }
-                    "레나타글라스크" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("레나타 글라스크")])
-                    }
-                    "윌럼프" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("누누와윌럼프")])
-                    }
-                    "드븐" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("드레이븐")])
-                    }
-                    "마이" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("마스터이")])
-                    }
-                    "미포" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("미스포츈")])
-                    }
-                    "볼베" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("볼리베어")])
-                    }
-                    "블미" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("블라디미르")])
-
-                    }
-                    "블랭", "블크", "블츠" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("블리츠크랭크")])
-
-                    }
-                    "솔", "아우솔", "아우렐리온솔" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("아우렐리온 솔")])
-
-                    }
-                    "트타" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("트리스타나")])
-
-                    }
-                    "트페" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("트위스티드페이트")])
-
-                    }
-
-                    else -> {
-                        items.forEach { i ->
-                            if (i.name.length >= searchText.length) {
-                                if (i.name.substring(0, searchText.length)
-                                        .contains(searchText)
-                                ) {
-                                    searchList.add(i)
-                                }
-                            }
+                items.forEach { i ->
+                    if (i.name.length >= searchText.length) {
+                        if (i.name.substring(0, searchText.length)
+                                .equals(searchText,true)
+                        ) {
+                            searchList.add(i)
                         }
                     }
-                }*/
+                }
                 binding.recyclerView!!.adapter = adapter(searchList)
             }
         })
@@ -127,41 +80,41 @@ class ViewActivity : AppCompatActivity() {
         binding.tier?.text = "$tier  ${intent.getStringExtra("rank")}"
         binding.point?.text = intent.getStringExtra("leaguePoints") + "LP"
 
-       /* when (tier) {
+        when (tier) {
 
             "IRON" -> {
-                icon?.setImageResource(R.drawable.iron)
+                binding.icon?.setImageResource(R.drawable.iron)
             }
             "BRONZE" -> {
-                icon?.setImageResource(R.drawable.bronze)
+                binding.icon?.setImageResource(R.drawable.bronze)
             }
             "SILVER" -> {
-                icon?.setImageResource(R.drawable.silver)
+                binding.icon?.setImageResource(R.drawable.silver)
             }
             "GOLD" -> {
-                icon?.setImageResource(R.drawable.gold)
+                binding.icon?.setImageResource(R.drawable.gold)
             }
             "PLATINUM" -> {
-                icon?.setImageResource(R.drawable.platinum)
+                binding.icon?.setImageResource(R.drawable.platinum)
             }
             "DIAMOND" -> {
-                icon?.setImageResource(R.drawable.diamond)
+                binding.icon?.setImageResource(R.drawable.diamond)
             }
             "MASTER" -> {
-                icon?.setImageResource(R.drawable.master)
+                binding.icon?.setImageResource(R.drawable.master)
             }
             "GRANDMASTER" -> {
-                icon?.setImageResource(R.drawable.grandmaster)
+                binding.icon?.setImageResource(R.drawable.grandmaster)
             }
             "CHALLENGER" -> {
-                icon?.setImageResource(R.drawable.challenger)
+                binding.icon?.setImageResource(R.drawable.challenger)
             }
             else -> {
-                icon?.setImageResource(R.drawable.provisional)
-                tierv?.text = "Unranked"
-                point2?.text = ""
+                binding.icon?.setImageResource(R.drawable.provisional)
+                binding.tier?.text = "Unranked"
+                binding.point?.text = ""
             }
-        }*/
+        }
         binding.id?.text = intent.getStringExtra("name")
 
 

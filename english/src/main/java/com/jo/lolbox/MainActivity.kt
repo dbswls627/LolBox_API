@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jo.lolbox.databinding.ActivityMainBinding
@@ -21,23 +22,36 @@ import java.net.URL
 private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    var nation :String = "kr"
+    lateinit var db: AppDatabase
     var id:String? = null
     var idSuccess = true
-    private val idAddress = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
-    private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
-    private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
+    val https :String ="https://"
+    private val idAddress = ".api.riotgames.com/lol/summoner/v4/summoners/by-name/"
+    private val boxAddress = ".api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
+    private val tierAddress = ".api.riotgames.com/lol/league/v4/entries/by-summoner/"
     var url: String? = null
     var items = java.util.ArrayList<item>()
     var sortList = java.util.ArrayList<item>()
     var nameArray = ArrayList<String>()
     var keyArray = ArrayList<String>()
+    override fun onRestart() {
+        notifyDataSetChanged()
+        super.onRestart()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        db = AppDatabase.getInstance(this)!!
+
+        notifyDataSetChanged()
+
+
         binding.text!!.imeOptions = EditorInfo.IME_ACTION_DONE
+        binding.spinner.adapter = ArrayAdapter.createFromResource(this,R.array.spinnerItem,android.R.layout.simple_spinner_dropdown_item)
         binding.text!!.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 setIntent(binding.text!!.text.toString())
@@ -62,16 +76,15 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("테스트", obj.getJSONObject(nameArray[1]).getString("key"))
             Log.d("테스트", keyArray[0])
-            binding.warning.text="테스트"
             searchID("대통령댁",intent)
         }
         thread.start()
 
     }
 
-    private fun setIntent(name: String) {
+    fun setIntent(name: String) {
         idSuccess = true
-      /*  val dialog = Dialog(this)
+        val dialog = Dialog(this)
         dialog.setContentView(R.layout.loding_dialog)
         dialog.window!!.setLayout(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -79,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         )
         dialog.setCanceledOnTouchOutside(false)
 
-        dialog.show()*/
+        dialog.show()
         items.clear()
         val intent = Intent(this, ViewActivity::class.java)
         var cancel = false
@@ -89,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             if (idSuccess) {
                 searchData(intent)
             }
-           // dialog.dismiss()
+            dialog.dismiss()
 
             if (!cancel && idSuccess) {
                 startActivity(intent)
@@ -99,37 +112,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         thread.start()
-        /*dialog.setOnCancelListener {
+        dialog.setOnCancelListener {
             thread.interrupt()
             cancel = true
-        }*/
+        }
 
     }
-   /* fun notifyDataSetChanged(){
+    fun notifyDataSetChanged(){
         var historyList= java.util.ArrayList<history>()
         for(i in db.historyDao().get()){
             historyList.add(i)
         }
         historyList.reverse()
-        rv = findViewById(R.id.history_rv)
-        val mRecyclerAdapter = historyadapter(historyList, this)
-        rv?.adapter = mRecyclerAdapter
 
-        rv?.layoutManager = LinearLayoutManager(this)
+        val mRecyclerAdapter = historyadapter(historyList, this)
+        binding.historyRv?.adapter = mRecyclerAdapter
+
+        binding.historyRv?.layoutManager = LinearLayoutManager(this)
         mRecyclerAdapter.notifyDataSetChanged()
-    }*/
+    }
 
     private fun searchID(name: String, intent: Intent) {
 
         val urlIdAddress =
-            idAddress + name + "?api_key=" + resources.getString(R.string.key)
+            https+nation+idAddress + name + "?api_key=" + resources.getString(R.string.key)
 
         try {
             val url1 = URL(urlIdAddress).readText()
             val obj = JSONObject(url1)
             id = obj.getString("id")
             intent.putExtra("name", name)
-            //db.historyDao().insert(history(name))
+            db.historyDao().insert(history(name))
 
         } catch (e: MalformedURLException) {
             e.printStackTrace()
@@ -149,9 +162,9 @@ class MainActivity : AppCompatActivity() {
     private fun searchData(intent: Intent) {
         try {
             val urlTierAddress =
-                tierAddress + id + "?api_key=" + resources.getString(R.string.key)
+                https+nation+tierAddress + id + "?api_key=" + resources.getString(R.string.key)
             val urlBoxAddress =
-                boxAddress + id + "?api_key=" + resources.getString(R.string.key)
+                https+nation+boxAddress + id + "?api_key=" + resources.getString(R.string.key)
 
             val url1 = URL(urlBoxAddress).readText()
             val url2 = URL(urlTierAddress).readText()

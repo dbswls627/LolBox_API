@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinnerItem">
+        <item>KR</item>
+        <item>미</item>
+        <item>유</item>
+        <item>일</item>
+    </string-array>
+</resources>
