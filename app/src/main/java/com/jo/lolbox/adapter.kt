@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.jo.json.R
 import java.io.Serializable
 import java.util.*
 class item(val name:String,val box:String,val level:Int,val point:Int) : Serializable
