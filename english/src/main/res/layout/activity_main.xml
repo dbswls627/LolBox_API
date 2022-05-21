@@ -12,7 +12,7 @@
         android:background="#FA9191"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="리그오브레전드 공식 API 서버의 장애로 인해 느려질 수 있습니다."/>
+        android:text="League of Legends official API server may be slow due to a failure."/>
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="100dp"
@@ -29,7 +29,7 @@
 
         <EditText
             android:drawablePadding="10dp"
-            android:hint="소환사명 검색"
+            android:hint="Search"
             android:id="@+id/text"
             android:layout_weight="5"
             android:layout_width="0dp"
@@ -41,7 +41,7 @@
     <TextView
         android:paddingBottom="5dp"
         android:textSize="40dp"
-        android:text="최근검색"
+        android:text="Recent Search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <androidx.recyclerview.widget.RecyclerView

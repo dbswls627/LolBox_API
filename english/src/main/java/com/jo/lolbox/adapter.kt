@@ -57,10 +57,10 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
             holder.level.setImageResource(R.drawable.level7)
         }
         if (list[position].box == "true") {
-            holder.text.text = "상자 획득 완료"
+            holder.text.text = "Chest Acquired"
             holder.box.setImageResource(R.drawable.boxo)
         } else {
-            holder.text.text = "상자 미획득"
+            holder.text.text = "not acquired"
             holder.box.setImageResource(R.drawable.boxp)
         }
 

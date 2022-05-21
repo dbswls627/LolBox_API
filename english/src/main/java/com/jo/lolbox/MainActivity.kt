@@ -25,7 +25,7 @@ import java.net.URL
 private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    var nation :String = "kr"
+    var nation :String = "na1"
     lateinit var db: AppDatabase
     var id:String? = null
     var idSuccess = true
@@ -54,7 +54,14 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.text!!.imeOptions = EditorInfo.IME_ACTION_DONE
-        binding.spinner.adapter = ArrayAdapter.createFromResource(this,R.array.spinnerItem,android.R.layout.simple_spinner_dropdown_item)
+        val adapter= ArrayAdapter.createFromResource(this,R.array.spinnerItem,android.R.layout.simple_spinner_dropdown_item)
+        binding.spinner.adapter =adapter
+
+        if (db.historyDao().getNation()!=null){
+            val spinnerPosition: Int = adapter.getPosition(db.historyDao().getNation())
+            binding.spinner.setSelection(spinnerPosition)
+        }
+
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             @SuppressLint("SetTextI18n")
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -95,8 +102,8 @@ class MainActivity : AppCompatActivity() {
                         nation= "jp1"
                     }
                 }
-                runOnUiThread {    binding.warning.text = nation }
-
+                db.historyDao().insert(nation("nation",binding.spinner.selectedItem.toString()))
+                notifyDataSetChanged()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -127,6 +134,45 @@ class MainActivity : AppCompatActivity() {
         }
         thread.start()
 
+    }
+
+    fun notifyDataSetChanged(){
+        var historyList= java.util.ArrayList<history>()
+        for(i in db.historyDao().get(nation)){
+            historyList.add(i)
+        }
+        historyList.reverse()
+
+        val mRecyclerAdapter = historyadapter(historyList, this)
+        binding.historyRv?.adapter = mRecyclerAdapter
+
+        binding.historyRv?.layoutManager = LinearLayoutManager(this)
+        mRecyclerAdapter.notifyDataSetChanged()
+    }
+    private fun searchID(name: String,nation: String ,intent: Intent) {
+
+        val urlIdAddress =
+            https+nation+idAddress + name + "?api_key=" + resources.getString(R.string.key)
+        try {
+            val url1 = URL(urlIdAddress).readText()
+            val obj = JSONObject(url1)
+            id = obj.getString("id")
+            intent.putExtra("name", name)
+            db.historyDao().insert(history(name,nation))
+
+        } catch (e: MalformedURLException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            runOnUiThread {
+                Toast.makeText(this@MainActivity, "존재하지 않는 소환사명입니다.", Toast.LENGTH_SHORT)
+                    .show()
+                idSuccess = false
+            }
+
+            e.printStackTrace()
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
     }
 
     fun setIntent(name: String,nation :String) {
@@ -164,45 +210,6 @@ class MainActivity : AppCompatActivity() {
             cancel = true
         }
 
-    }
-    fun notifyDataSetChanged(){
-        var historyList= java.util.ArrayList<history>()
-        for(i in db.historyDao().get()){
-            historyList.add(i)
-        }
-        historyList.reverse()
-
-        val mRecyclerAdapter = historyadapter(historyList, this)
-        binding.historyRv?.adapter = mRecyclerAdapter
-
-        binding.historyRv?.layoutManager = LinearLayoutManager(this)
-        mRecyclerAdapter.notifyDataSetChanged()
-    }
-
-    private fun searchID(name: String,nation: String ,intent: Intent) {
-
-        val urlIdAddress =
-            https+nation+idAddress + name + "?api_key=" + resources.getString(R.string.key)
-        try {
-            val url1 = URL(urlIdAddress).readText()
-            val obj = JSONObject(url1)
-            id = obj.getString("id")
-            intent.putExtra("name", name)
-            db.historyDao().insert(history(name,nation))
-
-        } catch (e: MalformedURLException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            runOnUiThread {
-                Toast.makeText(this@MainActivity, "존재하지 않는 소환사명입니다.", Toast.LENGTH_SHORT)
-                    .show()
-                idSuccess = false
-            }
-
-            e.printStackTrace()
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
     }
 
     private fun searchData(intent: Intent,nation: String) {
