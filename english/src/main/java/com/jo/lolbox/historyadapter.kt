@@ -7,21 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import com.jo.lolbox.databinding.HistoryBinding
+import com.jo.lolbox.databinding.ItemBinding
 
 import java.util.*
 
-class recyclerViewHolder2(v : View) : RecyclerView.ViewHolder(v){
+class recyclerViewHolder2(private val binding:HistoryBinding ) : RecyclerView.ViewHolder(binding.root){
 
 
-    var his: TextView = v.findViewById(R.id.history)
-    var del: ImageButton = v.findViewById(R.id.del)
+    var his = binding.history
+    var del = binding.del
 }
 class historyadapter(private val list: ArrayList<history>, val context: Context) : RecyclerView.Adapter<recyclerViewHolder2>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclerViewHolder2 {
 
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.history, parent, false)
-        return recyclerViewHolder2(view)
+        val binding = HistoryBinding.inflate(LayoutInflater.from(context), parent, false)
+        return recyclerViewHolder2(binding)
     }
 
     override fun onBindViewHolder(holder: recyclerViewHolder2, position: Int) {
@@ -32,7 +34,7 @@ class historyadapter(private val list: ArrayList<history>, val context: Context)
             (context as MainActivity).notifyDataSetChanged()
         }
         holder.his.setOnClickListener {
-            (context as MainActivity).setIntent(list[position].s)
+            (context as MainActivity).setIntent(list[position].s,list[position].nation)
         }
     }
 

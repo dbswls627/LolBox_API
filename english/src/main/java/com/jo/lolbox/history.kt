@@ -3,9 +3,9 @@ package com.jo.lolbox
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(primaryKeys= ["s","nation"])
     data class history(
-        @PrimaryKey
-        var s:String
+        var s:String,
+        var nation:String
 )
     

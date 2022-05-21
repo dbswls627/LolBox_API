@@ -1,12 +1,15 @@
 package com.jo.lolbox
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,9 +55,57 @@ class MainActivity : AppCompatActivity() {
 
         binding.text!!.imeOptions = EditorInfo.IME_ACTION_DONE
         binding.spinner.adapter = ArrayAdapter.createFromResource(this,R.array.spinnerItem,android.R.layout.simple_spinner_dropdown_item)
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @SuppressLint("SetTextI18n")
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+
+                //아이템이 클릭 되면 맨 위부터 position 0번부터 순서대로 동작하게 됩니다.
+                when (position) {
+                    0 -> {
+                        nation = "na1"
+                    }
+                    1 -> {
+                        nation= "euw1"
+                    }
+                    2 -> {
+                        nation= "eun1"
+                    }
+                    3 -> {
+                        nation= "br1"
+                    }
+                    4 -> {
+                        nation= "oc1"
+                    }
+                    5 -> {
+                        nation= "kr"
+                    }
+                    6 -> {
+                        nation= "tr1"
+                    }
+                    7 -> {
+                        nation= "la2"
+                    }
+                    8 -> {
+                        nation= "la1"
+                    }
+                    9 -> {
+                        nation= "lu"
+                    }
+                    10 -> {
+                        nation= "jp1"
+                    }
+                }
+                runOnUiThread {    binding.warning.text = nation }
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
         binding.text!!.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                setIntent(binding.text!!.text.toString())
+                setIntent(binding.text!!.text.toString(),nation)
                 true
             } else false
         }
@@ -73,16 +124,12 @@ class MainActivity : AppCompatActivity() {
                 nameArray.add(championName[i].toString())
                 keyArray.add(obj.getJSONObject(nameArray[i]).getString("key"))
             }
-
-            Log.d("테스트", obj.getJSONObject(nameArray[1]).getString("key"))
-            Log.d("테스트", keyArray[0])
-            searchID("대통령댁",intent)
         }
         thread.start()
 
     }
 
-    fun setIntent(name: String) {
+    fun setIntent(name: String,nation :String) {
         idSuccess = true
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.loding_dialog)
@@ -98,9 +145,9 @@ class MainActivity : AppCompatActivity() {
         var cancel = false
         val thread = Thread {
 
-            searchID(name, intent)
+            searchID(name,nation ,intent)
             if (idSuccess) {
-                searchData(intent)
+                searchData(intent,nation)
             }
             dialog.dismiss()
 
@@ -132,17 +179,16 @@ class MainActivity : AppCompatActivity() {
         mRecyclerAdapter.notifyDataSetChanged()
     }
 
-    private fun searchID(name: String, intent: Intent) {
+    private fun searchID(name: String,nation: String ,intent: Intent) {
 
         val urlIdAddress =
             https+nation+idAddress + name + "?api_key=" + resources.getString(R.string.key)
-
         try {
             val url1 = URL(urlIdAddress).readText()
             val obj = JSONObject(url1)
             id = obj.getString("id")
             intent.putExtra("name", name)
-            db.historyDao().insert(history(name))
+            db.historyDao().insert(history(name,nation))
 
         } catch (e: MalformedURLException) {
             e.printStackTrace()
@@ -159,7 +205,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun searchData(intent: Intent) {
+    private fun searchData(intent: Intent,nation: String) {
         try {
             val urlTierAddress =
                 https+nation+tierAddress + id + "?api_key=" + resources.getString(R.string.key)

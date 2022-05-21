@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinnerItem">
+        <item>NA</item>
+        <item>EUW</item>
+        <item>EUNE</item>
+        <item>BR</item>
+        <item>OCE</item>
         <item>KR</item>
-        <item>미</item>
-        <item>유</item>
-        <item>일</item>
+        <item>TR</item>
+        <item>LAS</item>
+        <item>LAN</item>
+        <item>LU</item>
+        <item>JP</item>
+
     </string-array>
 </resources>
