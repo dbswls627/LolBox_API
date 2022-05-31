@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <EditText
-            android:hint="챔피언 검색"
+            android:hint="Search"
             android:inputType="text"
             android:layout_weight="5"
             android:textSize="25sp"
