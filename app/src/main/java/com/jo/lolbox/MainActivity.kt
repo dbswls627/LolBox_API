@@ -7,6 +7,7 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
@@ -18,12 +19,11 @@ import java.net.URL
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,historyadapter.ItemDelListener {
     var t: EditText? = null
     private var rv: RecyclerView? = null
     var id: String? = null
     var idSuccess = true
-    lateinit var db: AppDatabase
     var items = ArrayList<item>()
     var sortList = ArrayList<item>()
     val arrayID = arrayListOf(
@@ -190,28 +190,48 @@ class MainActivity : AppCompatActivity() {
     private val idAddress = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
-    override fun onRestart() {
-        notifyDataSetChanged()
-        super.onRestart()
+    private val viewModel: MyViewModel by lazy {
+        ViewModelProvider(this)[MyViewModel::class.java]
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        db = AppDatabase.getInstance(this)!!
+
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         t = findViewById(R.id.text)
         rv = findViewById(R.id.history_rv)
 
-
-        notifyDataSetChanged()
+        val mRecyclerAdapter = historyadapter(viewModel.getData() as ArrayList<history>, this,this)
+        rv?.adapter = mRecyclerAdapter
+        rv?.layoutManager = LinearLayoutManager(this)
+        mRecyclerAdapter.notifyDataSetChanged()
+        viewModel.getLiveData().observe(this, { i ->
+           notifyDataSetChanged()
+        })
         t!!.imeOptions = EditorInfo.IME_ACTION_DONE
         t!!.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 setIntent(t!!.text.toString())
+
                 true
             } else false
         }
+
+    }
+
+    fun notifyDataSetChanged(){
+        var historyList=ArrayList<history>()
+        for(i in viewModel.getData()){
+            historyList.add(i)
+        }
+        historyList.reverse()
+        rv = findViewById(R.id.history_rv)
+        val mRecyclerAdapter = historyadapter(historyList, this,this)
+        rv?.adapter = mRecyclerAdapter
+
+        rv?.layoutManager = LinearLayoutManager(this)
+        mRecyclerAdapter.notifyDataSetChanged()
     }
 
     fun setIntent(name: String) {
@@ -250,19 +270,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-    fun notifyDataSetChanged(){
-        var historyList=ArrayList<history>()
-        for(i in db.historyDao().get()){
-            historyList.add(i)
-        }
-        historyList.reverse()
-        rv = findViewById(R.id.history_rv)
-        val mRecyclerAdapter = historyadapter(historyList, this)
-        rv?.adapter = mRecyclerAdapter
 
-        rv?.layoutManager = LinearLayoutManager(this)
-        mRecyclerAdapter.notifyDataSetChanged()
-    }
 
     private fun searchID(name: String, intent: Intent) {
 
@@ -274,7 +282,7 @@ class MainActivity : AppCompatActivity() {
             val obj = JSONObject(url1)
             id = obj.getString("id")
             intent.putExtra("name", name)
-            db.historyDao().insert(history(name))
+            viewModel.insert(name)
 
         } catch (e: MalformedURLException) {
             e.printStackTrace()
@@ -361,5 +369,10 @@ class MainActivity : AppCompatActivity() {
 
 
         }
+    }
+
+    override fun onItemDel(name: String) {
+        Log.d("테스트",name)
+        viewModel.delete(name)
     }
 }

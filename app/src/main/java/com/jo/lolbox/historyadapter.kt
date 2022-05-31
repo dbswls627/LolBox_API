@@ -16,7 +16,10 @@ class recyclerViewHolder2(v : View) : RecyclerView.ViewHolder(v){
     var his: TextView = v.findViewById(R.id.history)
     var del: ImageButton = v.findViewById(R.id.del)
 }
-class historyadapter(private val list: ArrayList<history>, val context: Context) : RecyclerView.Adapter<recyclerViewHolder2>() {
+class historyadapter(private val list: ArrayList<history>, val context: Context, var itemDel :ItemDelListener) : RecyclerView.Adapter<recyclerViewHolder2>() {
+    interface ItemDelListener {
+        fun onItemDel(name: String)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclerViewHolder2 {
 
@@ -27,9 +30,9 @@ class historyadapter(private val list: ArrayList<history>, val context: Context)
     override fun onBindViewHolder(holder: recyclerViewHolder2, position: Int) {
         var db: AppDatabase = AppDatabase.getInstance(context)!!
         holder.his?.text=list[position].s
+
         holder.del.setOnClickListener {
-            db.historyDao().delete(list[position])
-            (context as MainActivity).notifyDataSetChanged()
+            itemDel?.onItemDel(list[position].s)
         }
         holder.his.setOnClickListener {
             (context as MainActivity).setIntent(list[position].s)
