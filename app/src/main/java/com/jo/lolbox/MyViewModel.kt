@@ -1,9 +1,13 @@
 package com.jo.lolbox
 
 import android.app.Application
+import androidx.databinding.BindingAdapter
+import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import java.util.ArrayList
 
@@ -17,12 +21,9 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     .fallbackToDestructiveMigration().allowMainThreadQueries()
     .build()
 
+    val list = getLiveData()
     fun getLiveData() : LiveData<List<history>> {
         return db.historyDao().getLiveData()
-    }
-
-    fun getData() : List<history> {
-        return db.historyDao().getData()
     }
 
     fun insert(name:String){
@@ -32,4 +33,7 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     fun delete(name: String){
         db.historyDao().delete(history(name))
     }
+
+
+
 }

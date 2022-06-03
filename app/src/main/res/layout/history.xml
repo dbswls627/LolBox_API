@@ -16,7 +16,6 @@
         android:id="@+id/history"
         android:gravity="center_vertical"
         android:textSize="30dp"
-        android:text="즐겨찾기"
         android:layout_width="0dp"
         android:layout_height="50dp"/>
     <ImageButton

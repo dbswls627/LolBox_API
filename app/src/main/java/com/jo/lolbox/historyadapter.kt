@@ -1,24 +1,24 @@
 package com.jo.lolbox
 
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.lifecycle.LiveData
 
 import java.util.*
 
 class recyclerViewHolder2(v : View) : RecyclerView.ViewHolder(v){
 
-
     var his: TextView = v.findViewById(R.id.history)
     var del: ImageButton = v.findViewById(R.id.del)
 }
-class historyadapter(private val list: ArrayList<history>, val context: Context, var itemDel :ItemDelListener) : RecyclerView.Adapter<recyclerViewHolder2>() {
-    interface ItemDelListener {
+class historyadapter(private val list: LiveData<List<history>>, var listener:ItemListener) : RecyclerView.Adapter<recyclerViewHolder2>() {
+    interface ItemListener {
         fun onItemDel(name: String)
+        fun onItemSelect(name: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclerViewHolder2 {
@@ -28,19 +28,23 @@ class historyadapter(private val list: ArrayList<history>, val context: Context,
     }
 
     override fun onBindViewHolder(holder: recyclerViewHolder2, position: Int) {
-        var db: AppDatabase = AppDatabase.getInstance(context)!!
-        holder.his?.text=list[position].s
+
+        holder.his?.text= list.value!![position].s
 
         holder.del.setOnClickListener {
-            itemDel?.onItemDel(list[position].s)
+            listener?.onItemDel(list.value!![position].s)
         }
         holder.his.setOnClickListener {
-            (context as MainActivity).setIntent(list[position].s)
+            listener?.onItemSelect(list.value!![position].s)
         }
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return try {
+            list.value!!.size
+        }catch (e:Exception){
+            0
+        }
     }
 
 }

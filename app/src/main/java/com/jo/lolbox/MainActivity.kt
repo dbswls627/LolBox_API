@@ -1,15 +1,22 @@
 package com.jo.lolbox
+import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jo.lolbox.databinding.ActivityMainBinding
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -18,10 +25,8 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.*
 
-
-class MainActivity : AppCompatActivity() ,historyadapter.ItemDelListener {
+class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
     var t: EditText? = null
-    private var rv: RecyclerView? = null
     var id: String? = null
     var idSuccess = true
     var items = ArrayList<item>()
@@ -190,48 +195,29 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemDelListener {
     private val idAddress = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
-    private val viewModel: MyViewModel by lazy {
-        ViewModelProvider(this)[MyViewModel::class.java]
-    }
+
+    lateinit var viewModel: MyViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        val binding : ActivityMainBinding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        viewModel = ViewModelProvider(this,)[MyViewModel::class.java]
+        binding.lifecycleOwner = this
+        binding.viewModel=viewModel
         t = findViewById(R.id.text)
-        rv = findViewById(R.id.history_rv)
 
-        val mRecyclerAdapter = historyadapter(viewModel.getData() as ArrayList<history>, this,this)
-        rv?.adapter = mRecyclerAdapter
-        rv?.layoutManager = LinearLayoutManager(this)
+        val mRecyclerAdapter = historyadapter(viewModel.list, this)
+        binding.historyRv?.adapter = mRecyclerAdapter
+        binding.historyRv?.layoutManager = LinearLayoutManager(this)
         mRecyclerAdapter.notifyDataSetChanged()
-        viewModel.getLiveData().observe(this, { i ->
-           notifyDataSetChanged()
-        })
+
         t!!.imeOptions = EditorInfo.IME_ACTION_DONE
         t!!.setOnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 setIntent(t!!.text.toString())
-
                 true
             } else false
         }
-
-    }
-
-    fun notifyDataSetChanged(){
-        var historyList=ArrayList<history>()
-        for(i in viewModel.getData()){
-            historyList.add(i)
-        }
-        historyList.reverse()
-        rv = findViewById(R.id.history_rv)
-        val mRecyclerAdapter = historyadapter(historyList, this,this)
-        rv?.adapter = mRecyclerAdapter
-
-        rv?.layoutManager = LinearLayoutManager(this)
-        mRecyclerAdapter.notifyDataSetChanged()
     }
 
     fun setIntent(name: String) {
@@ -372,7 +358,12 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemDelListener {
     }
 
     override fun onItemDel(name: String) {
-        Log.d("테스트",name)
         viewModel.delete(name)
     }
+
+    override fun onItemSelect(name: String) {
+        setIntent(name)
+    }
+
 }
+
