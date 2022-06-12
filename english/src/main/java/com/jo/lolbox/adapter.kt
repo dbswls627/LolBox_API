@@ -19,7 +19,7 @@ class recyclerViewHolder(private val binding: ItemBinding) : RecyclerView.ViewHo
     var exp = binding.exp
 }
 
-class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recyclerViewHolder>() {
+class adapter(private val list: ArrayList<item>,val imageUrl:String) : RecyclerView.Adapter<recyclerViewHolder>() {
     private var context : Context? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): recyclerViewHolder {
         context = parent.context
@@ -30,8 +30,7 @@ class adapter(private val list: ArrayList<item>) : RecyclerView.Adapter<recycler
     override fun onBindViewHolder(holder: recyclerViewHolder, position: Int) {
 
         holder.name.text = list[position].name
-        val imageUrl =
-            "http://ddragon.leagueoflegends.com/cdn/12.9.1/img/champion/"
+
         Glide.with(context!!).load(imageUrl+list[position].name+".png").into(holder.cham)
         holder.exp.text = list[position].point.toString() + "점"
 

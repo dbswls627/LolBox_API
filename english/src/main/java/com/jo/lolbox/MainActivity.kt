@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val boxAddress = ".api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = ".api.riotgames.com/lol/league/v4/entries/by-summoner/"
     var url: String? = null
+    lateinit var imageUrl:String
     var items = java.util.ArrayList<item>()
     var sortList = java.util.ArrayList<item>()
     var nameArray = ArrayList<String>()
@@ -122,6 +123,10 @@ class MainActivity : AppCompatActivity() {
             var doc = Jsoup.connect("https://developer.riotgames.com/docs/lol").get()
             var elements = doc.select("div.content p a")
             url = elements[18].text()
+            Log.d("test",elements[23].text())
+
+
+            imageUrl = elements[23].text().replace("Aatrox.png","")
             val url1 = URL(url).readText()
             var obj = JSONObject(url1)
             obj = obj.getJSONObject("data")
@@ -237,6 +242,7 @@ class MainActivity : AppCompatActivity() {
                         intent.putExtra("leaguePoints", temp.getString("leaguePoints"))
                         intent.putExtra("wins", temp.getString("wins").toInt())
                         intent.putExtra("losses", temp.getString("losses").toInt())
+                        intent.putExtra("imageUrl",imageUrl)
                         break;
                     }
                 }

@@ -21,7 +21,7 @@ class ViewActivity : AppCompatActivity() {
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
-
+    lateinit var imageUrl:String
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +38,9 @@ class ViewActivity : AppCompatActivity() {
 
 
         items = intent.getSerializableExtra("items") as ArrayList<item>;
-        binding.recyclerView!!.adapter = adapter(items)
+        imageUrl = intent.getStringExtra("imageUrl").toString()
+
+        binding.recyclerView!!.adapter = adapter(items,imageUrl)
         sortList = intent.getSerializableExtra("sort") as ArrayList<item>;
         val tier: String = intent.getStringExtra("tier").toString()
         var b: Boolean = true
@@ -73,7 +75,7 @@ class ViewActivity : AppCompatActivity() {
                         }
                     }
                 }
-                binding.recyclerView!!.adapter = adapter(searchList)
+                binding.recyclerView!!.adapter = adapter(searchList,imageUrl)
             }
         })
 
