@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
     data class history(
-        @PrimaryKey
+        @PrimaryKey(autoGenerate = true)
+        var id:Int,
         var s:String
 )
     

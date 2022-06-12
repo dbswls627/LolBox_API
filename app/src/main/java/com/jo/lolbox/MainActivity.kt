@@ -268,6 +268,7 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
             val obj = JSONObject(url1)
             id = obj.getString("id")
             intent.putExtra("name", name)
+            viewModel.delete(name)
             viewModel.insert(name)
 
         } catch (e: MalformedURLException) {

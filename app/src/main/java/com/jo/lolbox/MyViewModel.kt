@@ -27,11 +27,11 @@ class MyViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun insert(name:String){
-        db.historyDao().insert(history(name))
+        db.historyDao().insert(name)
     }
 
     fun delete(name: String){
-        db.historyDao().delete(history(name))
+        db.historyDao().delete(name)
     }
 
 

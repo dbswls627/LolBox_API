@@ -6,17 +6,20 @@ import androidx.room.OnConflictStrategy.REPLACE
 
 @Dao
 interface historyDao {
- @Query("select * from history")
+ @Query("select * from history order by id desc")
  fun getLiveData(): LiveData<List<history>>
-
- @Query("select * from history")
- fun getData(): List<history>
 
  @Insert(onConflict = REPLACE)
  fun insert(history: history)
 
+ @Query("insert into history(s) values(:name)")
+ fun insert(name :String)
+
  @Delete
  fun delete(history: history)
+
+ @Query("delete from history where s= :name ")
+ fun delete(name :String)
 
  @Update
  fun upadte(history: history)
