@@ -10,10 +10,10 @@ android {
         viewBinding = true
     }
     defaultConfig {
-        applicationId "com.jo.lolbo"
+        applicationId "com.jo.lolbox_eng"
         minSdk 21
         targetSdk 31
-        versionCode 1
+        versionCode 11
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,8 +36,8 @@ android {
 
 dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-    implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'org.jsoup:jsoup:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.6.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
