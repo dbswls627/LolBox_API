@@ -26,6 +26,7 @@ class ViewActivity : AppCompatActivity() {
     var items = ArrayList<item>()
     var searchList = ArrayList<item>()
     var sortList = ArrayList<item>()
+    var searchHelpList = ArrayList<String>()
 
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
@@ -49,17 +50,21 @@ class ViewActivity : AppCompatActivity() {
 
 
         items = intent.getSerializableExtra("items") as ArrayList<item>;
-        mainRv!!.adapter = adapter(items)
+        items.forEach { item ->
+            searchHelpList.add(item.koreanName)
+        }
+        val imageUrl: String? = intent.getStringExtra("imageUrl")
+        mainRv!!.adapter = adapter(items, imageUrl!!)
         sortList = intent.getSerializableExtra("sort") as ArrayList<item>;
         val tier: String = intent.getStringExtra("tier").toString()
         var b: Boolean = true
         sortButton!!.setOnClickListener {
             search!!.setText("")
             if (b) {
-                mainRv!!.adapter = adapter(sortList)
+                mainRv!!.adapter = adapter(sortList,imageUrl)
                 b = false
             } else {
-                mainRv!!.adapter = adapter(items)
+                mainRv!!.adapter = adapter(items,imageUrl)
                 b = true
             }
         }
@@ -78,51 +83,51 @@ class ViewActivity : AppCompatActivity() {
 
                 when (searchText) {
                     "그브" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("그레이브즈")])
+                        searchList.add(items[searchHelpList.indexOf("그레이브즈")])
                     }
                     "레나타글라스크" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("레나타 글라스크")])
+                        searchList.add(items[searchHelpList.indexOf("레나타 글라스크")])
                     }
                     "윌럼프" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("누누와윌럼프")])
+                        searchList.add(items[searchHelpList.indexOf("누누와윌럼프")])
                     }
                     "드븐" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("드레이븐")])
+                        searchList.add(items[searchHelpList.indexOf("드레이븐")])
                     }
                     "마이" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("마스터이")])
+                        searchList.add(items[searchHelpList.indexOf("마스터이")])
                     }
                     "미포" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("미스포츈")])
+                        searchList.add(items[searchHelpList.indexOf("미스포츈")])
                     }
                     "볼베" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("볼리베어")])
+                        searchList.add(items[searchHelpList.indexOf("볼리베어")])
                     }
                     "블미" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("블라디미르")])
+                        searchList.add(items[searchHelpList.indexOf("블라디미르")])
 
                     }
                     "블랭", "블크", "블츠" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("블리츠크랭크")])
+                        searchList.add(items[searchHelpList.indexOf("블리츠크랭크")])
 
                     }
                     "솔", "아우솔", "아우렐리온솔" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("아우렐리온 솔")])
+                        searchList.add(items[searchHelpList.indexOf("아우렐리온 솔")])
 
                     }
                     "트타" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("트리스타나")])
+                        searchList.add(items[searchHelpList.indexOf("트리스타나")])
 
                     }
                     "트페" -> {
-                        searchList.add(items[adapter.arrayList.indexOf("트위스티드페이트")])
+                        searchList.add(items[searchHelpList.indexOf("트위스티드페이트")])
 
                     }
 
                     else -> {
                         items.forEach { i ->
-                            if (i.name.length >= searchText.length) {
-                                if (i.name.substring(0, searchText.length)
+                            if (i.koreanName.length >= searchText.length) {
+                                if (i.koreanName.substring(0, searchText.length)
                                         .contains(searchText)
                                 ) {
                                     searchList.add(i)
@@ -131,7 +136,7 @@ class ViewActivity : AppCompatActivity() {
                         }
                     }
                 }
-                mainRv!!.adapter = adapter(searchList)
+                mainRv!!.adapter = adapter(searchList,imageUrl)
             }
         })
 

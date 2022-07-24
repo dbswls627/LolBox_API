@@ -20,6 +20,7 @@ import com.jo.lolbox.databinding.ActivityMainBinding
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import org.jsoup.Jsoup
 import java.io.IOException
 import java.net.MalformedURLException
 import java.net.URL
@@ -192,6 +193,12 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
         74,
         120
     )
+    var url: String? = null
+    lateinit var imageUrl:String
+
+    var englishNameArray = ArrayList<String>()
+    var koreanNameArray = ArrayList<String>()
+    var keyArray = ArrayList<String>()
     private val idAddress = "https://kr.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
     private val boxAddress = "https://kr.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
     private val tierAddress = "https://kr.api.riotgames.com/lol/league/v4/entries/by-summoner/"
@@ -218,6 +225,26 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
                 true
             } else false
         }
+
+        var thread = Thread {
+
+            var doc = Jsoup.connect("https://developer.riotgames.com/docs/lol").get()
+            var elements = doc.select("div.content p a")
+            url = elements[18].text().replace("en_US","ko_KR")
+
+            imageUrl = elements[23].text().replace("Aatrox.png","")
+            val url1 = URL(url).readText()
+            var obj = JSONObject(url1)
+            obj = obj.getJSONObject("data")
+            val championName = obj.names()
+            Log.d("test",obj.getJSONObject(championName[1].toString()).getString("name"))
+            for (i in 0 until championName.length()) {
+                englishNameArray.add(championName[i].toString())
+                koreanNameArray.add(obj.getJSONObject(championName[i].toString()).getString("name"))
+                keyArray.add(obj.getJSONObject(englishNameArray[i]).getString("key"))
+            }
+        }
+        thread.start()
     }
 
     fun setIntent(name: String) {
@@ -315,20 +342,20 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
                     }
                 }
             }
-            adapter.arrayList.forEach { i ->
-                items.add(item(i, "false", 0, 0))
-                sortList.add(item(i, "false", 0, 0))
+            koreanNameArray.forEachIndexed() { index, i ->
+                items.add(item(i,englishNameArray[index],keyArray[index], "false", 0, 0))
+                sortList.add(item(i,englishNameArray[index],keyArray[index], "false", 0, 0))
             }
 
 
             for (i in 0 until jsonArray1.length()) {
                 val temp = jsonArray1.getJSONObject(i)
-                val id1 = temp.getInt("championId")
+                val id1 = temp.getString("championId")
                 val b = temp.getString("chestGranted")
                 val l = temp.getInt("championLevel")
                 val p = temp.getInt("championPoints")
-                items[arrayID.indexOf(id1)] =
-                    item(adapter.arrayList[arrayID.indexOf(id1)], b, l, p)
+                items[keyArray.indexOf(id1)] =
+                    item(koreanNameArray[keyArray.indexOf(id1)],englishNameArray[keyArray.indexOf(id1)],id1,b, l, p)
             }
 
 
@@ -349,11 +376,10 @@ class MainActivity : AppCompatActivity() ,historyadapter.ItemListener {
             items.forEachIndexed { index, value ->
                 sortList[index] = value
             }
+            items.sortWith(compareBy { it.koreanName })
             intent.putExtra("sort", sortList)
-            items.sortWith(compareBy { it.name })
-
             intent.putExtra("items", items)
-
+            intent.putExtra("imageUrl",imageUrl)
 
         }
     }
