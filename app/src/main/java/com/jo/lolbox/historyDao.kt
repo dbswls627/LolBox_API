@@ -12,8 +12,8 @@ interface historyDao {
  @Insert(onConflict = REPLACE)
  fun insert(history: history)
 
- @Query("insert into history(s) values(:name)")
- fun insert(name :String)
+ @Query("insert into history(profileIconId,s) values(:profileIconId,:name)")
+ fun insert(profileIconId:String,name :String)
 
  @Delete
  fun delete(history: history)

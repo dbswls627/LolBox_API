@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
     data class history(
         @PrimaryKey(autoGenerate = true)
         var id:Int,
+        var profileIconId:String,
         var s:String
 )
     
