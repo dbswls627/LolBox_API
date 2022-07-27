@@ -1,28 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/historyIcon"
-        android:gravity="center_vertical"
-        android:textSize="30dp"
-        android:src="@drawable/ic_baseline_fiber_manual_record_24"
-        android:text="즐겨찾기"
-        android:layout_weight="0.4"
-        android:layout_width="0dp"
-        android:layout_height="50dp"/>
-    <TextView
-        android:layout_weight="5"
-        android:id="@+id/history"
-        android:gravity="center_vertical"
-        android:textSize="30dp"
-        android:layout_width="0dp"
-        android:layout_height="50dp"/>
-    <ImageButton
-        android:layout_weight="1"
-        android:background="@drawable/ic_baseline_delete_24"
-        android:id="@+id/del"
-        android:scaleType="fitXY"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
+            app:cardCornerRadius="30dp">
+
+            <ImageView
+                android:id="@+id/historyIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/boxp"
+                android:text="즐겨찾기" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/history"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="5"
+            android:gravity="center_vertical"
+            android:textSize="30dp" />
+
+        <ImageButton
+            android:id="@+id/del"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/ic_baseline_cancel_24" />
     </LinearLayout>
+    <View
+        android:layout_gravity="center"
+        android:layout_width="400dp"
+        android:background="#55BBBBBB"
+        android:layout_height="1dp"/>
+
+</LinearLayout>

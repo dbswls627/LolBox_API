@@ -34,11 +34,7 @@ class ViewActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view)
-        icon = findViewById(R.id.icon)
-        idv = findViewById(R.id.id)
-        tierv = findViewById(R.id.tier)
-        point2 = findViewById(R.id.point)
-        score = findViewById(R.id.score)
+
         search = findViewById(R.id.search)
         sortButton = findViewById(R.id.sort)
         mainRv = findViewById(R.id.recyclerView)
@@ -48,23 +44,34 @@ class ViewActivity : AppCompatActivity() {
 
         /* initiate recyclerview */
 
+        val id = intent.getStringExtra("name")
+        val tier = intent.getStringExtra("tier").toString()+ " " +intent.getStringExtra("rank")
+        val point = intent.getStringExtra("leaguePoints") + "LP"
+        val wins = intent.getIntExtra("wins",0)
+        val losses = intent.getIntExtra("losses",0)
+        val score =
+            (wins!!.plus(losses!!)).toString() + "전 " + wins + "승 " + losses + "패 " + "(" + round(
+                wins!! / (wins!!.plus(losses!!).toFloat()) * 100 * 10
+            ) / 10f + "%)"
+
+
 
         items = intent.getSerializableExtra("items") as ArrayList<item>;
         items.forEach { item ->
             searchHelpList.add(item.koreanName)
         }
         val imageUrl: String? = intent.getStringExtra("imageUrl")
-        mainRv!!.adapter = adapter(items, imageUrl!!)
+        mainRv!!.adapter = adapter(items, imageUrl!!, id, tier, point, score)
         sortList = intent.getSerializableExtra("sort") as ArrayList<item>;
-        val tier: String = intent.getStringExtra("tier").toString()
+
         var b: Boolean = true
         sortButton!!.setOnClickListener {
             search!!.setText("")
             if (b) {
-                mainRv!!.adapter = adapter(sortList,imageUrl)
+                mainRv!!.adapter = adapter(sortList,imageUrl,id,tier,point,score)
                 b = false
             } else {
-                mainRv!!.adapter = adapter(items,imageUrl)
+                mainRv!!.adapter = adapter(items, imageUrl, id, tier, point, score)
                 b = true
             }
         }
@@ -136,57 +143,11 @@ class ViewActivity : AppCompatActivity() {
                         }
                     }
                 }
-                mainRv!!.adapter = adapter(searchList,imageUrl)
+                mainRv!!.adapter = adapter(searchList, imageUrl, id, tier, point, score)
             }
         })
 
-        tierv?.text = "$tier  ${intent.getStringExtra("rank")}"
-        point2?.text = intent.getStringExtra("leaguePoints") + "LP"
 
-        when (tier) {
-
-            "IRON" -> {
-                icon?.setImageResource(R.drawable.iron)
-            }
-            "BRONZE" -> {
-                icon?.setImageResource(R.drawable.bronze)
-            }
-            "SILVER" -> {
-                icon?.setImageResource(R.drawable.silver)
-            }
-            "GOLD" -> {
-                icon?.setImageResource(R.drawable.gold)
-            }
-            "PLATINUM" -> {
-                icon?.setImageResource(R.drawable.platinum)
-            }
-            "DIAMOND" -> {
-                icon?.setImageResource(R.drawable.diamond)
-            }
-            "MASTER" -> {
-                icon?.setImageResource(R.drawable.master)
-            }
-            "GRANDMASTER" -> {
-                icon?.setImageResource(R.drawable.grandmaster)
-            }
-            "CHALLENGER" -> {
-                icon?.setImageResource(R.drawable.challenger)
-            }
-            else -> {
-                icon?.setImageResource(R.drawable.provisional)
-                tierv?.text = "Unranked"
-                point2?.text = ""
-            }
-        }
-        idv?.text = intent.getStringExtra("name")
-
-
-        val wins = intent.getIntExtra("wins",0)
-        val losses = intent.getIntExtra("losses",0)
-        score?.text =
-            (wins!!.plus(losses!!)).toString() + "전 " + wins + "승 " + losses + "패 " + "(" + round(
-                wins!! / (wins!!.plus(losses!!).toFloat()) * 100 * 10
-            ) / 10f + "%)"
     }
 
 

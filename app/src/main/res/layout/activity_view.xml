@@ -5,57 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     tools:context="com.jo.lolbox.ViewActivity">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_height="100dp"
-                android:layout_width="100dp" />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_margin="7dp"
-                    android:id="@+id/id"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_margin="7dp"
-                    android:id="@+id/tier"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_margin="7dp"
-                    android:id="@+id/point"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-                <TextView
-                    android:layout_margin="7dp"
-                    android:id="@+id/score"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-        </LinearLayout>
+
     <LinearLayout
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
+            android:id="@+id/search"
+            android:layout_weight="5"
+            android:paddingLeft="20dp"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext"
             android:hint="챔피언 검색"
             android:inputType="text"
-            android:layout_weight="5"
             android:textSize="25sp"
-            android:id="@+id/search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:textAllCaps="false" />
         <ImageButton
+            android:background="@null"
             android:id="@+id/sort"
             android:src="@drawable/ic_baseline_sort_24"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="50dp" />
     </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
