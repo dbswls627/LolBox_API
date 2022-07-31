@@ -92,20 +92,20 @@ class ViewActivity : AppCompatActivity() {
                     "그브" -> {
                         searchList.add(items[searchHelpList.indexOf("그레이브즈")])
                     }
-                    "레나타글라스크" -> {
-                        searchList.add(items[searchHelpList.indexOf("레나타 글라스크")])
-                    }
-                    "윌럼프" -> {
-                        searchList.add(items[searchHelpList.indexOf("누누와윌럼프")])
-                    }
                     "드븐" -> {
                         searchList.add(items[searchHelpList.indexOf("드레이븐")])
                     }
-                    "마이" -> {
-                        searchList.add(items[searchHelpList.indexOf("마스터이")])
+                    "레나타글라스크" ,"레나타글","레나타글라","레나타글라스"-> {
+                        searchList.add(items[searchHelpList.indexOf("레나타 글라스크")])
                     }
-                    "미포" -> {
-                        searchList.add(items[searchHelpList.indexOf("미스포츈")])
+                    "마이" -> {
+                        searchList.add(items[searchHelpList.indexOf("마스터 이")])
+                    }
+                    "문도박","문도박사" -> {
+                        searchList.add(items[searchHelpList.indexOf("문도 박사")])
+                    }
+                    "미포","미스포","미스포츈" -> {
+                        searchList.add(items[searchHelpList.indexOf("미스 포츈")])
                     }
                     "볼베" -> {
                         searchList.add(items[searchHelpList.indexOf("볼리베어")])
@@ -120,6 +120,13 @@ class ViewActivity : AppCompatActivity() {
                     }
                     "솔", "아우솔", "아우렐리온솔" -> {
                         searchList.add(items[searchHelpList.indexOf("아우렐리온 솔")])
+
+                    }
+                    "윌럼프" -> {
+                        searchList.add(items[searchHelpList.indexOf("누누와 윌럼프")])
+                    }
+                    "탐켄치","탐켄" -> {
+                        searchList.add(items[searchHelpList.indexOf("탐 켄치")])
 
                     }
                     "트타" -> {
