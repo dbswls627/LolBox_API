@@ -127,7 +127,7 @@ class ViewActivity : AppCompatActivity() {
 
                     }
                     "트페" -> {
-                        searchList.add(items[searchHelpList.indexOf("트위스티드페이트")])
+                        searchList.add(items[searchHelpList.indexOf("트위스티드 페이트")])
 
                     }
 
